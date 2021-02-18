@@ -1,0 +1,88 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  button(onclick='create()') create
+  button(onclick='testUpdate()') update
+  button(onclick='testDelete()') delete
+  button(onclick='testLogin()') login
+  button(onclick='testVideo()') video
+  br
+  br
+  div#display
+  script.
+    function create() {
+      let body = JSON.stringify({table: 'user', params: {
+        nom_User: 'Test', 
+        prenom_User: 'Test2', 
+        pseudo_User: 'TestTest', 
+        date_naissance: '1984-05-16', 
+        date_inscription: '2020-01-01 12:51:35', 
+        email: 'test@test.truc', 
+        password: 'testtest',
+        active_User: 1,
+        valide_User: 1,
+        id_Role: 1
+        }
+      });
+      let headers= {
+        'Content-Type': 'application/json'
+      };
+      fetch("/", {method: 'POST', body, headers}).then(res => res.text())
+          .then(
+            (result) => {
+              document.getElementById("display").innerText = result;
+            },
+          )
+    }
+    function testUpdate() {
+      let body = JSON.stringify({table: 'user', params: {pseudo_User: 'Test3'}, id: 156});
+      let headers= {
+        'Content-Type': 'application/json'
+      };
+      fetch("/", {method: 'PUT', body, headers}).then(res => res.text())
+          .then(
+            (result) => {
+              document.getElementById("display").innerText = result;
+            },
+          )
+    }
+    function testDelete() {
+      let body = JSON.stringify({table: 'user', id: 155});
+      let headers= {
+        'Content-Type': 'application/json'
+      };
+      fetch("/", {method: 'DELETE', body, headers}).then(res => res.text())
+          .then(
+            (result) => {
+              document.getElementById("display").innerText = result;
+            },
+          )
+    }
+    function testLogin() {
+      //- let body = JSON.stringify({email: 'admin@admin.fr', password: 'admin'});
+      let body = JSON.stringify({user: 2, login: true});
+      let headers= {
+        'Content-Type': 'application/json',
+        'authorization': 'eyJhbGciOiJIUzI1NiIsInXVCJ9.eyJpZCI6Miwicm9sZSI6MiwiaWF0IjoxNjExMDQ5MTg3LCJleHAiOjE2MTEwNDk0ODd9.7y6rDVabBiqqiQ8l9yOqCkktWAnGaRYn3ybOkC_qBWg'
+      };
+      fetch("/user/login", {method: 'POST', body, headers}).then(res => res.text())
+          .then(
+            (result) => {
+              document.getElementById("display").innerText = result;
+            },
+          )
+    }
+    function testVideo() {
+      let headers= {
+        'Content-Type': 'application/json',
+        'allow': 'video'
+      };
+      fetch("/video/10", {method: 'GET', headers}).then(res => res.text())
+          .then(
+            (result) => {
+              document.getElementById("display").innerText = result;
+            },
+          )
+    }
